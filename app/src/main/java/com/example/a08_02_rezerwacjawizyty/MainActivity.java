@@ -28,5 +28,29 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SummaryActivity.class);
             startActivity(intent);
         });
+
+        Intent intent = new Intent(this, SummaryActivity.class);
+
+        intent.putExtra(
+                SummaryActivity.EXTRA_SERVICE,
+                etService.getText().toString().trim()
+        );
+
+        intent.putExtra(
+                SummaryActivity.EXTRA_DATE,
+                etDate.getText().toString().trim()
+        );
+
+        intent.putExtra(
+                SummaryActivity.EXTRA_NAME,
+                etName.getText().toString().trim()
+        );
+
+        intent.putExtra(
+                SummaryActivity.EXTRA_PHONE,
+                etPhone.getText().toString().trim()
+        );
+
+        startActivity(intent);
     }
 }
