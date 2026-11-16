@@ -1,8 +1,10 @@
 package com.example.a08_02_rezerwacjawizyty;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +13,31 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class SummaryActivity extends AppCompatActivity {
+    private void share() {
 
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+
+        intent.putExtra(
+                Intent.EXTRA_TEXT,
+                tvSummary.getText().toString()
+        );
+
+        try {
+            startActivity(
+                    Intent.createChooser(
+                            intent,
+                            "Udostępnij rezerwację"
+                    )
+            );
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(
+                    this,
+                    "Brak aplikacji do udostępniania",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +48,9 @@ public class SummaryActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        findViewById(R.id.btnShare)
+                .setOnClickListener(v -> share());
 
         Intent intent = getIntent();
 
