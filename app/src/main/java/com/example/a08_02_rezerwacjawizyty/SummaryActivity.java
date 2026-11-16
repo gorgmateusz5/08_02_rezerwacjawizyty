@@ -52,4 +52,7 @@ public class SummaryActivity extends AppCompatActivity {
 
     public static final String EXTRA_PHONE =
             "com.example.rezerwacja.PHONE";
+
+    public static final String EXTRA_NUMBER =
+            "com.example.rezerwacja.NUMBER";
 }

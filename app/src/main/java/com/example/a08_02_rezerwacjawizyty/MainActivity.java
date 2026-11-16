@@ -3,12 +3,17 @@ package com.example.a08_02_rezerwacjawizyty;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private boolean validateForm() {
@@ -35,6 +40,44 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+
+    private void confirm() {
+
+        String number =
+                "R/" + (1000 + new Random().nextInt(9000));
+
+        Intent result = new Intent();
+
+        result.putExtra(
+                EXTRA_NUMBER,
+                number
+        );
+
+        setResult(RESULT_OK, result);
+        finish();
+    }
+    private final ActivityResultLauncher<Intent> summaryLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+
+                        if (result.getResultCode() == RESULT_OK
+                                && result.getData() != null) {
+
+                            String number = result.getData()
+                                    .getStringExtra(
+                                            SummaryActivity.EXTRA_NUMBER
+                                    );
+
+                            Toast.makeText(
+                                    this,
+                                    "Rezerwacja: " + number,
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
+                    });
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +89,12 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        findViewById(R.id.btnConfirm)
+                .setOnClickListener(v -> confirm());
+
+        findViewById(R.id.btnEdit)
+                .setOnClickListener(v -> finish());
 
         findViewById(R.id.btnNext).setOnClickListener(v -> {
 
@@ -75,12 +124,15 @@ public class MainActivity extends AppCompatActivity {
                     etPhone.getText().toString().trim()
             );
 
-            startActivity(intent);
+            summaryLauncher.launch(intent);
         });
+
+
 
         findViewById(R.id.btnNext).setOnClickListener(v -> {
             Intent intent = new Intent(this, SummaryActivity.class);
-            startActivity(intent);
+            summaryLauncher.launch(intent);
+
         });
 
         Intent intent = new Intent(this, SummaryActivity.class);
@@ -105,6 +157,6 @@ public class MainActivity extends AppCompatActivity {
                 etPhone.getText().toString().trim()
         );
 
-        startActivity(intent);
+        summaryLauncher.launch(intent);
     }
 }
